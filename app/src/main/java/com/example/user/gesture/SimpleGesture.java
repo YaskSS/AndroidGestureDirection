@@ -10,18 +10,20 @@ import android.view.MotionEvent;
 public class SimpleGesture extends AppCompatActivity {
 
     private GestureDetectorCompat mDetector;
+    private GameLogic logic;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mDetector = new GestureDetectorCompat(this, new MyGestureListener());
+        logic = new GameLogic();
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent e) {
-       return this.mDetector.onTouchEvent(e);
-      //  return super.onTouchEvent(e);
+        return this.mDetector.onTouchEvent(e);
+        //  return super.onTouchEvent(e);
     }
 
 
@@ -48,22 +50,28 @@ public class SimpleGesture extends AppCompatActivity {
             if (Math.abs(diffX) > Math.abs(diffY)) {
                 if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
                     if (diffX > 0) {
-                        Log.d(DEBUG_TAG, " onSwipeRight ");
+                        // onSwipeRight
+                        logic.setCurrentDirection(Constants.EAST_DIRECTION);
                     } else {
-                        Log.d(DEBUG_TAG, " onSwipeLeft ");
+                        //   onSwipeLeft
+                        logic.setCurrentDirection(Constants.WEST_DIRECTION);
                     }
                     result = true;
                 }
             } else {
                 if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
                     if (diffY < 0) {
-                        Log.d(DEBUG_TAG, "onSwipeUp ");
+                        //onSwipeUp
+                        logic.setCurrentDirection(Constants.NORTH_DIRECTION);
                     } else {
-                        Log.d(DEBUG_TAG, "onSwipeDown ");
+                        //onSwipeDown
+                        logic.setCurrentDirection(Constants.SOUTH_DIRECTION);
                     }
                     result = true;
                 }
             }
+
+            logic.nextMove();
             return result;
         }
     }
